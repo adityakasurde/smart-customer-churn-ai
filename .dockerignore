@@ -1,0 +1,50 @@
+# =============================================================================
+# Docker Build Context Exclusion Rules (.dockerignore)
+# =============================================================================
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Version Control
+.git/
+.gitignore
+
+# Secrets & Environment Variables (Must not be baked into images)
+.env
+*.env
+!.env.example
+
+# Python Bytecode & Runtime Caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Testing & Coverage Caches
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+tests/
+
+# Large Datasets (Not needed at inference time; models are pre-trained)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# IDEs & System Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs & Temporary Files
+*.log
+scratch/
+tmp/

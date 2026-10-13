@@ -1,0 +1,68 @@
+# =============================================================================
+# Smart Customer Churn Prediction AI - Docker Compose Configuration
+# =============================================================================
+# Usage:
+#   1. Standalone Prediction Mode (No Database needed):
+#      docker compose up --build
+#
+#   2. Full Stack with Integrated MySQL Database:
+#      docker compose --profile with-db up --build
+# =============================================================================
+
+services:
+  # Primary Streamlit Dashboard & Prediction Engine Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart-churn-app
+    ports:
+      - "8501:8501"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+      - MYSQL_HOST=${MYSQL_HOST:-mysql}
+      - MYSQL_PORT=${MYSQL_PORT:-3306}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-churn_db}
+      - MYSQL_USER=${MYSQL_USER:-}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # Optional Dedicated MySQL Service (Active only when specifying --profile with-db)
+  mysql:
+    image: mysql:8.0
+    container_name: smart-churn-mysql
+    profiles:
+      - with-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password_placeholder}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-churn_db}
+      MYSQL_USER: ${MYSQL_USER:-churn_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-churn_password_placeholder}
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  mysql_data:
+    driver: local
