@@ -1,0 +1,189 @@
+{
+  "dataset_info": {
+    "total_samples": 7043,
+    "train_samples": 5634,
+    "test_samples": 1409,
+    "test_size_ratio": 0.2,
+    "num_features": 19,
+    "feature_names_raw": [
+      "gender",
+      "SeniorCitizen",
+      "Partner",
+      "Dependents",
+      "tenure",
+      "PhoneService",
+      "MultipleLines",
+      "InternetService",
+      "OnlineSecurity",
+      "OnlineBackup",
+      "DeviceProtection",
+      "TechSupport",
+      "StreamingTV",
+      "StreamingMovies",
+      "Contract",
+      "PaperlessBilling",
+      "PaymentMethod",
+      "MonthlyCharges",
+      "TotalCharges"
+    ],
+    "numerical_features": [
+      "SeniorCitizen",
+      "tenure",
+      "MonthlyCharges",
+      "TotalCharges"
+    ],
+    "categorical_features": [
+      "gender",
+      "Partner",
+      "Dependents",
+      "PhoneService",
+      "MultipleLines",
+      "InternetService",
+      "OnlineSecurity",
+      "OnlineBackup",
+      "DeviceProtection",
+      "TechSupport",
+      "StreamingTV",
+      "StreamingMovies",
+      "Contract",
+      "PaperlessBilling",
+      "PaymentMethod"
+    ]
+  },
+  "training_cv_5fold": {
+    "logistic_regression": {
+      "accuracy": 0.7485,
+      "precision": 0.5169,
+      "recall": 0.8013,
+      "f1": 0.6283,
+      "roc_auc": 0.846,
+      "std_roc_auc": 0.0124,
+      "std_f1": 0.0232
+    },
+    "random_forest": {
+      "accuracy": 0.762,
+      "precision": 0.5369,
+      "recall": 0.7572,
+      "f1": 0.6281,
+      "roc_auc": 0.845,
+      "std_roc_auc": 0.0083,
+      "std_f1": 0.0102
+    }
+  },
+  "champion_selection": {
+    "selected_model": "logistic_regression",
+    "rationale": "Logistic Regression selected as champion based on higher/comparable 5-fold CV ROC-AUC (0.8460 vs. 0.8450) and superior interpretability. With balanced class weights, it achieves strong churn recall on training validation.",
+    "decision_basis": "5-fold Stratified CV on Training Data (ROC-AUC & F1)"
+  },
+  "held_out_test_evaluation": {
+    "logistic_regression": {
+      "accuracy": 0.7381,
+      "precision": 0.5043,
+      "recall": 0.7834,
+      "f1_score": 0.6136,
+      "roc_auc": 0.8416,
+      "threshold": 0.5,
+      "positive_class": 1,
+      "confusion_matrix": {
+        "true_negatives": 747,
+        "false_positives": 288,
+        "false_negatives": 81,
+        "true_positives": 293,
+        "matrix": [
+          [
+            747,
+            288
+          ],
+          [
+            81,
+            293
+          ]
+        ]
+      },
+      "classification_report": {
+        "0": {
+          "precision": 0.9021739130434783,
+          "recall": 0.7217391304347827,
+          "f1-score": 0.8019323671497585,
+          "support": 1035.0
+        },
+        "1": {
+          "precision": 0.504302925989673,
+          "recall": 0.7834224598930482,
+          "f1-score": 0.6136125654450262,
+          "support": 374.0
+        },
+        "accuracy": 0.7381121362668559,
+        "macro avg": {
+          "precision": 0.7032384195165756,
+          "recall": 0.7525807951639154,
+          "f1-score": 0.7077724662973923,
+          "support": 1409.0
+        },
+        "weighted avg": {
+          "precision": 0.7965644388361517,
+          "recall": 0.7381121362668559,
+          "f1-score": 0.7519454219137259,
+          "support": 1409.0
+        }
+      }
+    },
+    "random_forest": {
+      "accuracy": 0.7537,
+      "precision": 0.525,
+      "recall": 0.7567,
+      "f1_score": 0.6199,
+      "roc_auc": 0.839,
+      "threshold": 0.5,
+      "positive_class": 1,
+      "confusion_matrix": {
+        "true_negatives": 779,
+        "false_positives": 256,
+        "false_negatives": 91,
+        "true_positives": 283,
+        "matrix": [
+          [
+            779,
+            256
+          ],
+          [
+            91,
+            283
+          ]
+        ]
+      },
+      "classification_report": {
+        "0": {
+          "precision": 0.8954022988505748,
+          "recall": 0.7526570048309179,
+          "f1-score": 0.8178477690288714,
+          "support": 1035.0
+        },
+        "1": {
+          "precision": 0.5250463821892394,
+          "recall": 0.7566844919786097,
+          "f1-score": 0.619934282584885,
+          "support": 374.0
+        },
+        "accuracy": 0.7537260468417317,
+        "macro avg": {
+          "precision": 0.7102243405199071,
+          "recall": 0.7546707484047638,
+          "f1-score": 0.7188910258068781,
+          "support": 1409.0
+        },
+        "weighted avg": {
+          "precision": 0.7970963280689287,
+          "recall": 0.7537260468417317,
+          "f1-score": 0.7653143098876004,
+          "support": 1409.0
+        }
+      }
+    }
+  },
+  "business_tradeoffs": {
+    "false_negatives_risk": "A False Negative occurs when an at-risk customer is classified as loyal ('No Churn'). Because no retention intervention is triggered, the customer leaves permanently, resulting in loss of customer lifetime value (LTV) and high customer acquisition cost (CAC) to replace them. False Negatives are typically the most financially damaging error in telecom.",
+    "false_positives_risk": "A False Positive occurs when a loyal customer is classified as at-risk ('Churn'). The company might spend retention budget offering discounts, promotions, or outreach. While this incurs minor unnecessary marketing costs, the customer remains with the company.",
+    "strategic_recommendation": "Because False Negatives carry higher financial impact than False Positives, models should prioritize high Recall and ROC-AUC rather than raw Accuracy alone. Operating at a lower decision threshold or balancing class weights improves churn recall."
+  }
+}

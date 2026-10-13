@@ -1,0 +1,31 @@
+{
+  "project": "Smart Customer Churn Prediction AI",
+  "random_state": 42,
+  "positive_class": "1 (Churn)",
+  "default_threshold": 0.5,
+  "model_parameters": {
+    "logistic_regression": {
+      "C": "1.0",
+      "class_weight": "balanced",
+      "max_iter": "1000",
+      "penalty": "deprecated",
+      "random_state": "42",
+      "solver": "lbfgs"
+    },
+    "random_forest": {
+      "class_weight": "balanced",
+      "max_depth": "10",
+      "min_samples_leaf": "2",
+      "min_samples_split": "5",
+      "n_estimators": "150",
+      "random_state": "42"
+    }
+  },
+  "selected_champion": "logistic_regression",
+  "champion_rationale": "Logistic Regression selected as champion based on higher/comparable 5-fold CV ROC-AUC (0.8460 vs. 0.8450) and superior interpretability. With balanced class weights, it achieves strong churn recall on training validation.",
+  "artifact_files": {
+    "logistic_regression": "logistic_regression.joblib",
+    "random_forest": "random_forest.joblib",
+    "metrics_summary": "metrics_summary.json"
+  }
+}
